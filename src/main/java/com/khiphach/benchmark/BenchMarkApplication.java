@@ -35,28 +35,33 @@ public class BenchMarkApplication {
 		try {
 			if (gpu != null) {
 				totalBenchmark += Integer
-						.valueOf(getPassmarkBenchmark(decodeAndGetResultLink(getFirstResultOfGoogleResult(gpu))));
+						.valueOf(getPassmarkBenchmark(getFirstResultOfGoogleResult(gpu)));
 			}
 			if (cpu != null) {
-				totalBenchmark += Integer.valueOf(decodeAndGetResultLink(getFirstResultOfGoogleResult(cpu)));
+				totalBenchmark += Integer.valueOf(getFirstResultOfGoogleResult(cpu));
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.ok(0);
 		}
 		return ResponseEntity.ok(totalBenchmark);
 	}
 
 	private String getFirstResultOfGoogleResult(String q) throws IOException {
-		return Jsoup.connect(String.format(GOOGLE_BASE_QUERY, q)).get().getElementsByTag(TAG_H3).get(0)
-				.getElementsByTag(TAG_A).get(0).attr(TAG_HREF);
+		return Jsoup.connect(String.format(GOOGLE_BASE_QUERY, q)).userAgent(
+				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+				.get().getElementsByAttributeValue("class", "r").get(0).getElementsByTag(TAG_A).get(0).attr("href");
 	}
 
+	@SuppressWarnings("unused")
 	private String decodeAndGetResultLink(String input) throws UnsupportedEncodingException {
 		String decodeInput = URLDecoder.decode(input, StandardCharsets.UTF_8.toString());
 		return decodeInput.substring(0, decodeInput.indexOf('&', decodeInput.indexOf('&') + 1));
 	}
 
 	private String getPassmarkBenchmark(String link) throws IOException {
-		return Jsoup.connect(link).get().getElementsByAttributeValue(TAG_STYLE, PASSMARK_BENCHMARK_FIELD).get(0).text();
+		return Jsoup.connect(link).userAgent(
+				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36")
+				.get().getElementsByAttributeValue(TAG_STYLE, PASSMARK_BENCHMARK_FIELD).get(0).text();
 	}
 }
