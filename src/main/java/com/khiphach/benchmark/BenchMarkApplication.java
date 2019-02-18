@@ -26,6 +26,7 @@ public class BenchMarkApplication {
 	private static final String AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
 	private static final Map<String, Integer> CACHE_GPU = new HashMap<>();
 	private static final Map<String, Integer> CACHE_CPU = new HashMap<>();
+	private boolean isCached = false;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BenchMarkApplication.class, args);
@@ -44,13 +45,17 @@ public class BenchMarkApplication {
 	private void getGPUBenchmark(String gpu, Result result) {
 		try {
 			if (gpu != null) {
-				String gpuLowerCase = gpu.toLowerCase();
-				if (CACHE_GPU.containsKey(gpuLowerCase)) {
-					result.setGpu(CACHE_GPU.get(gpuLowerCase));
+				if (isCached) {
+					String gpuLowerCase = gpu.toLowerCase();
+					if (CACHE_GPU.containsKey(gpuLowerCase)) {
+						result.setGpu(CACHE_GPU.get(gpuLowerCase));
+					} else {
+						int tmp = Integer.parseInt(getPassmarkBenchmark(getFirstResultOfGoogleResult(gpu)));
+						result.setGpu(tmp);
+						CACHE_GPU.put(gpuLowerCase, tmp);
+					}
 				} else {
-					int tmp = Integer.parseInt(getPassmarkBenchmark(getFirstResultOfGoogleResult(gpu)));
-					result.setGpu(tmp);
-					CACHE_GPU.put(gpuLowerCase, tmp);
+					result.setGpu(Integer.parseInt(getPassmarkBenchmark(getFirstResultOfGoogleResult(gpu))));
 				}
 			}
 		} catch (Exception e) {
@@ -61,13 +66,17 @@ public class BenchMarkApplication {
 	private void getCPUBenchmark(String cpu, Result result) {
 		try {
 			if (cpu != null) {
-				String cpuLowerCase = cpu.toLowerCase();
-				if (CACHE_CPU.containsKey(cpuLowerCase)) {
-					result.setCpu(CACHE_CPU.get(cpuLowerCase));
+				if (isCached) {
+					String cpuLowerCase = cpu.toLowerCase();
+					if (CACHE_CPU.containsKey(cpuLowerCase)) {
+						result.setCpu(CACHE_CPU.get(cpuLowerCase));
+					} else {
+						int tmp = Integer.parseInt(getPassmarkBenchmark(getFirstResultOfGoogleResult(cpu)));
+						result.setCpu(tmp);
+						CACHE_CPU.put(cpuLowerCase, tmp);
+					}
 				} else {
-					int tmp = Integer.parseInt(getPassmarkBenchmark(getFirstResultOfGoogleResult(cpu)));
-					result.setCpu(tmp);
-					CACHE_CPU.put(cpuLowerCase, tmp);
+					result.setCpu(Integer.parseInt(getPassmarkBenchmark(getFirstResultOfGoogleResult(cpu))));
 				}
 			}
 		} catch (Exception e) {
