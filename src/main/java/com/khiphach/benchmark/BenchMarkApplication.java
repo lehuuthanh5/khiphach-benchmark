@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public class BenchMarkApplication {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(BenchMarkApplication.class);
 	private static final String GOOGLE_BASE_QUERY = "https://www.google.com.vn/search?q=%s passmark";
 	private static final String TAG_A = "a";
 	private static final String TAG_STYLE = "style";
@@ -61,7 +64,7 @@ public class BenchMarkApplication {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info("Error with {}", e.getMessage());
 			result.setGpu(0);
 		}
 	}
@@ -83,7 +86,7 @@ public class BenchMarkApplication {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info("Error with {}", e.getMessage());
 			result.setCpu(0);
 		}
 	}
