@@ -61,6 +61,7 @@ public class BenchMarkApplication {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.setGpu(0);
 		}
 	}
@@ -82,6 +83,7 @@ public class BenchMarkApplication {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.setCpu(0);
 		}
 	}
