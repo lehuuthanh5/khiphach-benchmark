@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +21,15 @@ import info.debatty.java.stringsimilarity.Cosine;
 @CrossOrigin
 public class BenchMarkApplication {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BenchMarkApplication.class);
-
 	private Properties cpus = new Properties();
+	private Properties gpus = new Properties();
 
 	public BenchMarkApplication() throws IOException {
 		try (InputStream is = new FileInputStream(ResourceUtils.getFile("classpath:cpu.properties"))) {
 			cpus.load(is);
+		}
+		try (InputStream is = new FileInputStream(ResourceUtils.getFile("classpath:gpu.properties"))) {
+			gpus.load(is);
 		}
 	}
 
@@ -44,14 +44,25 @@ public class BenchMarkApplication {
 		Result result = new Result();
 		final CustomeDouble cd = new CustomeDouble();
 		cd.doubleValue = -1;
-		cpus.forEach((key, value) -> {
-			double temp = jw.similarity(cpu, key.toString());
-			LOGGER.info("compare score {} - {}: {}", key, value, temp);
-			if (cd.doubleValue < temp) {
-				cd.doubleValue = temp;
-				result.setCpu(Integer.parseInt(value.toString()));
-			}
-		});
+		if (cpu != null) {
+			cpus.forEach((key, value) -> {
+				double temp = jw.similarity(cpu, key.toString());
+				if (cd.doubleValue < temp) {
+					cd.doubleValue = temp;
+					result.setCpu(Integer.parseInt(value.toString()));
+				}
+			});
+		}
+		if (gpu != null) {
+			gpus.forEach((key, value) -> {
+				double temp = jw.similarity(gpu, key.toString());
+				if (cd.doubleValue < temp) {
+					cd.doubleValue = temp;
+					result.setGpu(Integer.parseInt(value.toString()));
+				}
+			});
+		}
+		result.generateTotal();
 		return ResponseEntity.ok(result);
 	}
 
@@ -63,6 +74,12 @@ public class BenchMarkApplication {
 		private int gpu;
 		private int cpu;
 		private int total;
+
+		public Result() {
+			gpu = 0;
+			cpu = 0;
+			total = 0;
+		}
 
 		public int getGpu() {
 			return gpu;
