@@ -13,10 +13,6 @@ public class GenerateProperties {
 
 	public static Map<String, Integer> values = new HashMap<>();
 
-	public static void main(String... strings) throws IOException {
-		genereteGPU();
-	}
-
 	public static void genereteCPU() throws IOException {
 		Elements elements = Jsoup
 				.parse(new File("C:/Users/thanhlh7/Desktop/cpu.html"), StandardCharsets.UTF_8.toString())
@@ -29,7 +25,7 @@ public class GenerateProperties {
 		});
 		System.out.println(values);
 	}
-	
+
 	public static void genereteGPU() throws IOException {
 		Elements elements = Jsoup
 				.parse(new File("C:/Users/thanhlh7/Desktop/gpu.html"), StandardCharsets.UTF_8.toString())
