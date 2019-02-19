@@ -1,6 +1,5 @@
 package com.khiphach.benchmark;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -8,7 +7,6 @@ import java.util.Properties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,10 +23,11 @@ public class BenchMarkApplication {
 	private Properties gpus = new Properties();
 
 	public BenchMarkApplication() throws IOException {
-		try (InputStream is = new FileInputStream(ResourceUtils.getFile("classpath:cpu.properties"))) {
+		ClassLoader classLoader = this.getClass().getClassLoader();
+		try (InputStream is = classLoader.getResourceAsStream("cpu.properties")) {
 			cpus.load(is);
 		}
-		try (InputStream is = new FileInputStream(ResourceUtils.getFile("classpath:gpu.properties"))) {
+		try (InputStream is = classLoader.getResourceAsStream("gpu.properties")) {
 			gpus.load(is);
 		}
 	}
