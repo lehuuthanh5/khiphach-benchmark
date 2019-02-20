@@ -1,0 +1,158 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script type="text/javascript">
+$(function() {
+
+  // We can attach the `fileselect` event to all file inputs on the page
+  $(document).on('change', ':file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
+  });
+
+  // We can watch for our custom `fileselect` event like this
+  $(document).ready( function() {
+      $(':file').on('fileselect', function(event, numFiles, label) {
+
+          var input = $(this).parents('.input-group').find(':text'),
+              log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+          if( input.length ) {
+              input.val(log);
+          } else {
+              if( log ) alert(log);
+          }
+
+      });
+  });
+  
+});
+	function readSingleFile() {
+		var f = document.getElementById('benchmark_fileinput').files[0];   
+		if (f) {
+		var r = new FileReader();
+		r.onload = function(e) { 
+		  document.getElementById('benchmark_check_button').value = "Đang Kiểm Tra...";
+		  document.getElementById('benchmark_check_button').disabled = true;
+		  var contents = e.target.result;             
+		  var ct = r.result;
+		  var words = ct.split('\n');
+		  if(words[1].toLowerCase().trim() != 'system information') {
+			alert("Wrong DxDiag.txt format!");
+			document.getElementById('benchmark_check_button').disabled = false;
+			document.getElementById('benchmark_check_button').value = "Kiểm Tra";
+			return;
+		  }
+		  var breakflag = 0;
+		  var cpu;
+		  var gpu;
+		  var ram;
+		  var win;
+		  for(i = 0;i<words.length;i++) {
+			if(breakflag == 4) {
+				break;
+			}
+			if(words[i].trim().startsWith("Processor:")) {
+				breakflag++;
+				cpu = words[i].trim().replace("Processor:","").trim();
+			}
+			if(words[i].trim().startsWith("Memory:")) {
+				breakflag++;
+				ram = words[i].trim().replace("Memory:","").replace("RAM","").replace("MB","").trim() / 1024;
+			}
+			if(words[i].trim().startsWith("Operating System:")) {
+				breakflag++;
+				win = words[i].trim().replace("Operating System:","").trim();
+			}
+			if(words[i].trim().startsWith("Card name:")) {
+				breakflag++;
+				gpu = words[i].trim().replace("Card name:","").trim();
+			}
+		  }
+		  if(win.search("32-bit") != -1) {
+			win = "32-bit";
+		  } else {
+			win = "64-bit";
+		  }
+		 $.get('https://khiphach-benchmark.herokuapp.com/get?cpu=' + cpu + '&gpu=' + gpu, function(data, status){
+            r_minimum = document.getElementById('benchmark_minimum').value;
+			r_recommend = document.getElementById('benchmark_recommend').value;
+			r_win = document.getElementById('benchmark_win').value;
+			r_ram = document.getElementById('benchmark_ram').value;
+			message = "";
+			mid_require = (r_minimum * 1 + r_recommend * 1) / 2;
+			canPlay = true;
+			if(r_win.search(win) < 0) {
+				message += "<li>Windows của bác là " + win + " nhưng game yêu cầu " + r_win + "</li>";
+			} 
+			if(r_ram > ram) {
+				message += "<li>Up thêm RAM mới chơi được nha. Game cần RAM " + r_ram + "GB" + " mà máy bác chỉ có " + ram + "GB thôi</li>";
+				canPlay = false;
+			}
+			if(data.total < r_minimum) {
+				message += "<li>Điểm cấu hình của máy bác chưa đủ yêu cầu để chơi game này nha. Điểm cấu hình yêu cầu tối thiểu là " + r_minimum + ", nhưng máy bác chỉ đạt " + data.total + " điểm thôi</li>";
+				canPlay = false;
+			}
+			if(data.total >= r_minimum && data.total <= mid_require) {
+				message += "<li>Điểm cấu hình của máy bác có thể chiến game này với low setting nhé</li>"
+			}
+			if(data.total >= mid_require && data.total < r_recommend) {
+				message += "<li>Điểm cấu hình của máy bác có thể chiến game này với medium setting ha</li>"
+			}
+			if(data.total >= r_recommend) {
+				message += "<li>Điểm cấu hình của máy bác vô tư chiến game này nhé. Max setting được luôn</li>";
+			}
+			document.getElementById('benchmark_check_button').disabled = false;
+			document.getElementById('benchmark_check_button').value = "Kiểm Tra";
+			if(canPlay) {
+				message = "<strong>Chơi được bác ơi!</strong>" + message;
+				document.getElementById("alertResult").setAttribute("class", "col alert alert-success border-success rounded");
+			} else {
+				message = "<strong>Không chơi được bác ơi!</strong>" + message;
+				document.getElementById("alertResult").setAttribute("class", "col alert alert-danger border-danger rounded");
+			}
+			document.getElementById("alertResult").innerHTML = message;
+          });
+      }
+      r.readAsText(f);
+    } else { 
+      alert("Failed to load file");
+    }
+  }
+</script>
+</head>
+<body>
+<div class="page">
+<label for="formcheck"><h5><strong>Kiểm tra cấu hình</strong></h5></label>
+<div class="row" id="formcheck">
+          <div class="col-md-10">
+				<div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-outline-primary">
+                        Browse&hellip; <input type="file" style="display: none;" id="benchmark_fileinput">
+                    </span>
+                </label>
+                <input type="text" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="col-md-2">
+				<input class="btn btn-outline-secondary" onclick="readSingleFile()" id="benchmark_check_button" type="button" value="Kiểm Tra"/>
+          </div>
+  </div>
+  <div class="row" >
+  <div class="col" id="alertResult">
+  
+  </div>
+          </div>
+</div>
+
+<input id="benchmark_minimum" type="hidden" value="6000" />
+<input id="benchmark_recommend" type="hidden" value="7000" />
+<input id="benchmark_win" type="hidden" value="32-bit/64-bit" />
+<input id="benchmark_ram" type="hidden" value="4" />
+
+</body>
+</html>
