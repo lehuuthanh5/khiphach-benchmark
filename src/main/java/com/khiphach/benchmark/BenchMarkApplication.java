@@ -52,6 +52,7 @@ public class BenchMarkApplication {
 				}
 			});
 		}
+		cd.doubleValue = -1;
 		if (gpu != null) {
 			gpus.forEach((key, value) -> {
 				double temp = jw.similarity(gpu, key.toString());
