@@ -14,13 +14,12 @@ public class GenerateProperties {
 	public static Map<String, Integer> values = new HashMap<>();
 
 	public static void genereteCPU() throws IOException {
-		Elements elements = Jsoup
-				.parse(new File("C:/Users/thanhlh7/Desktop/cpu.html"), StandardCharsets.UTF_8.toString())
+		Elements elements = Jsoup.parse(new File("C:/Users/ADMINS/Desktop/cpu.html"), StandardCharsets.UTF_8.toString())
 				.getElementById("cputable").getElementById("100body").getElementsByTag("tr");
 		elements.forEach(e -> {
-			if (e.hasAttr("role")) {
+			if (e.hasAttr("role") && e.hasAttr("id")) {
 				Elements es = e.getElementsByTag("td");
-				values.put(es.get(0).getElementsByTag("a").get(0).text(), Integer.parseInt(es.get(1).text()));
+				values.put(es.get(0).getElementsByTag("a").get(1).text(), Integer.parseInt(es.get(2).text()));
 			}
 		});
 		System.out.println(values);
@@ -28,12 +27,12 @@ public class GenerateProperties {
 
 	public static void genereteGPU() throws IOException {
 		Elements elements = Jsoup
-				.parse(new File("C:/Users/thanhlh7/Desktop/gpu.html"), StandardCharsets.UTF_8.toString())
+				.parse(new File("C:/Users/ADMINS/Desktop/gpu.html"), StandardCharsets.UTF_8.toString())
 				.getElementById("cputable").getElementById("100body").getElementsByTag("tr");
 		elements.forEach(e -> {
-			if (e.hasAttr("id")) {
+			if (e.hasAttr("id") && e.hasAttr("role")) {
 				Elements es = e.getElementsByTag("td");
-				values.put(es.get(0).getElementsByTag("a").get(0).text(), Integer.parseInt(es.get(1).text()));
+				values.put(es.get(0).getElementsByTag("a").get(1).text(), Integer.parseInt(es.get(2).text()));
 			}
 		});
 		System.out.println(values);
