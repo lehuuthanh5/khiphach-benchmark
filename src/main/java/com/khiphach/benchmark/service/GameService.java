@@ -3,7 +3,9 @@ package com.khiphach.benchmark.service;
 import com.khiphach.benchmark.entity.Game;
 import com.khiphach.benchmark.enumeration.Status;
 import com.khiphach.benchmark.enumeration.Windows;
+import com.khiphach.benchmark.mapper.GameMapper;
 import com.khiphach.benchmark.model.CheckResponse;
+import com.khiphach.benchmark.model.GameDTO;
 import com.khiphach.benchmark.model.Result;
 import com.khiphach.benchmark.repository.GameDAO;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
@@ -20,19 +22,24 @@ public class GameService {
     private GameDAO gameDAO;
     @Autowired
     private BenchMarkService benchMarkService;
+    @Autowired
+    private GameMapper gameMapper;
 
     public List<Game> getAllGames() {
         return gameDAO.findAll();
     }
 
-    public Game createGame(Game game) {
+    public Game createGame(GameDTO gameDTO) {
+        Game game = gameMapper.gameDTOtoGame(gameDTO);
+        Result resultMin = benchMarkService.getBenchMark(gameDTO.getCpuMin(), gameDTO.getGpuMin());
+        Result resultMax = benchMarkService.getBenchMark(gameDTO.getCpuMax(), gameDTO.getGpuMax());
+        game.setCpuMin(resultMin.getCpu());
+        game.setCpuMax(resultMax.getCpu());
+        game.setGpuMin(resultMin.getGpu());
+        game.setGpuMax(resultMax.getGpu());
         if (gameDAO.existsById(game.getCode())) {
             throw new IllegalIdentifierException("Game code is existing");
         }
-        return gameDAO.save(game);
-    }
-
-    public Game updateGame(Game game) {
         return gameDAO.save(game);
     }
 
