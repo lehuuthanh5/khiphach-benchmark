@@ -43,6 +43,11 @@ public class GameService {
         return gameDAO.save(game);
     }
 
+    public void deleteGame(String code) {
+        gameDAO.deleteById(code);
+    }
+
+
     public CheckResponse checkGame(String code, String cpu, String gpu, int ram, Windows windows) {
         Game game = gameDAO.findById(code).orElse(null);
         if (game == null) {

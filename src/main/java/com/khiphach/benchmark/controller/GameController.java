@@ -7,6 +7,7 @@ import com.khiphach.benchmark.model.GameDTO;
 import com.khiphach.benchmark.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,11 @@ public class GameController {
     @GetMapping("/check")
     public CheckResponse checkGame(@RequestParam String code, @RequestParam String cpu, @RequestParam String gpu, @RequestParam int ram, @RequestParam Windows windows) {
         return gameService.checkGame(code, cpu, gpu, ram, windows);
+    }
+    
+    @DeleteMapping
+    public void deleteGame(String code) {
+        gameService.deleteGame(code);
     }
 
 }
