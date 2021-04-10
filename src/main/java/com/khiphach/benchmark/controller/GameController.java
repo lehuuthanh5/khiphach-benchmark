@@ -39,9 +39,9 @@ public class GameController {
     public CheckResponse checkGame(@RequestParam String code, @RequestParam String cpu, @RequestParam String gpu, @RequestParam int ram, @RequestParam Windows windows) {
         return gameService.checkGame(code, cpu, gpu, ram, windows);
     }
-    
+
     @DeleteMapping
-    public void deleteGame(String code) {
+    public void deleteGame(@RequestParam String code) {
         gameService.deleteGame(code);
     }
 
