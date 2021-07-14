@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,6 +34,11 @@ public class GameController {
     @PostMapping
     public Game createGame(@RequestBody GameDTO game) {
         return gameService.createGame(game);
+    }
+
+    @GetMapping("/create-by-link")
+    public Game createGame(@RequestParam String link, @RequestParam String type) throws IOException {
+        return gameService.createGame(link, type);
     }
 
     @GetMapping("/check")

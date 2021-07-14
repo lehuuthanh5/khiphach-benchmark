@@ -12,6 +12,69 @@ public class GameDTO {
     private int ramMin;
     private int ramMax;
     private Windows windows;
+    private String gpuMinDesc;
+    private String gpuMaxDesc;
+    private String cpuMinDesc;
+    private String cpuMaxDesc;
+    private String osDesc;
+    private int storage;
+    private String type;
+
+    public String getGpuMinDesc() {
+        return gpuMinDesc;
+    }
+
+    public void setGpuMinDesc(String gpuMinDesc) {
+        this.gpuMinDesc = gpuMinDesc;
+    }
+
+    public String getGpuMaxDesc() {
+        return gpuMaxDesc;
+    }
+
+    public void setGpuMaxDesc(String gpuMaxDesc) {
+        this.gpuMaxDesc = gpuMaxDesc;
+    }
+
+    public String getCpuMinDesc() {
+        return cpuMinDesc;
+    }
+
+    public void setCpuMinDesc(String cpuMinDesc) {
+        this.cpuMinDesc = cpuMinDesc;
+    }
+
+    public String getCpuMaxDesc() {
+        return cpuMaxDesc;
+    }
+
+    public void setCpuMaxDesc(String cpuMaxDesc) {
+        this.cpuMaxDesc = cpuMaxDesc;
+    }
+
+    public String getOsDesc() {
+        return osDesc;
+    }
+
+    public void setOsDesc(String osDesc) {
+        this.osDesc = osDesc;
+    }
+
+    public int getStorage() {
+        return storage;
+    }
+
+    public void setStorage(int storage) {
+        this.storage = storage;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getCode() {
         return code;
