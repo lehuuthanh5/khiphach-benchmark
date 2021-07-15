@@ -18,8 +18,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class GameService {
@@ -29,17 +34,51 @@ public class GameService {
     private BenchMarkService benchMarkService;
     @Autowired
     private GameMapper gameMapper;
+    private final Map<String, String> type = new HashMap<>();
+
+    public GameService() {
+        type.put("Action", "Hành Động");
+        type.put("Adventure", "Phiêu Lưu");
+        type.put("Arcade", "Giải Trí");
+        type.put("Battle Royale", "Battle Royale");
+        type.put("Co-op", "Co-op");
+        type.put("Crime", "Tội Phạm");
+        type.put("Fantasy", "Thần Thoại");
+        type.put("Fighting", "Đối Kháng");
+        type.put("Historic", "Lịch Sử");
+        type.put("Horror", "Kinh Dị");
+        type.put("Management", "Quản Lý");
+        type.put("Metroidvania", "Metroidvania");
+        type.put("MOBA", "MOBA");
+        type.put("Mystery", "Huyền Bí");
+        type.put("Platformer", "Đi Cảnh");
+        type.put("Puzzler", "Giải Đố");
+        type.put("PvP", "PvP");
+        type.put("Racing", "Đua Xe");
+        type.put("Retro", "Cổ Điển");
+        type.put("Rhythm", "Âm Nhạc");
+        type.put("RPG", "Nhập Vai");
+        type.put("Shooter", "Bắn Súng");
+        type.put("Sim", "Mô Phỏng");
+        type.put("Social", "Xã Hội");
+        type.put("Sport", "Thể Thao");
+        type.put("Strategy", "Chiến Thuật");
+        type.put("Survival", "Sinh Tồn");
+        type.put("Turn-based", "Turn-based");
+    }
 
     public List<Game> getAllGames() {
         return gameDAO.findAll();
     }
 
-    public Game createGame(String link, String type) throws IOException {
+    public Game createGame(String link) throws IOException {
         GameDTO game = new GameDTO();
         Document document = Jsoup.connect(link).userAgent("Mozilla").get();
         String gameName = document.getElementsByAttributeValue("itemprop", "name").get(0).text().replace("System Requirements", "").trim();
         game.setName(gameName);
-        game.setType(type);
+        String translatedType = Stream.of(document.getElementsByClass("gameGenreRow").get(0).text().split(",")).map(s -> type.get(s.trim()))
+                .filter(Objects::nonNull).collect(Collectors.joining(", "));
+        game.setType(translatedType);
         game.setCode(gameName.replace(" ", "").toLowerCase(Locale.ROOT));
         extractedMin(game, document);
         extractedMax(game, document);

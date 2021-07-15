@@ -37,8 +37,8 @@ public class GameController {
     }
 
     @GetMapping("/create-by-link")
-    public Game createGame(@RequestParam String link, @RequestParam String type) throws IOException {
-        return gameService.createGame(link, type);
+    public Game createGame(@RequestParam String link) throws IOException {
+        return gameService.createGame(link);
     }
 
     @GetMapping("/check")
