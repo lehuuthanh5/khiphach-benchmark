@@ -49,9 +49,12 @@ public class GameService {
                 .filter(Objects::nonNull).collect(Collectors.joining(", "));
         game.setType(translatedType);
         game.setCode(gameName.replace(" ", "").toLowerCase(Locale.ROOT));
-        extractedMin(game, document);
-        extractedMax(game, document);
-        return createGame(game);
+        boolean minExtracted = extractedMin(game, document);
+        boolean maxExtracted = extractedMax(game, document);
+        if (minExtracted || maxExtracted) {
+            return createGame(game);
+        }
+        return null;
     }
 
     public Game createGame(GameDTO gameDTO) {
@@ -97,10 +100,10 @@ public class GameService {
         return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindows(result.getGpu(), result.getCpu(), ram, windows);
     }
 
-    private void extractedMax(GameDTO game, Document document) {
+    private boolean extractedMax(GameDTO game, Document document) {
         Elements devDefSysReqRecWrapper = document.getElementsByClass("devDefSysReqRecWrapper");
         if (devDefSysReqRecWrapper.isEmpty()) {
-            return;
+            return false;
         }
         Elements max = devDefSysReqRecWrapper.get(0)
                 .getElementsByTag("li");
@@ -145,12 +148,13 @@ public class GameService {
                 game.setStorage(storage);
             }
         });
+        return true;
     }
 
-    private void extractedMin(GameDTO game, Document document) {
+    private boolean extractedMin(GameDTO game, Document document) {
         Elements devDefSysReqMinWrapper = document.getElementsByClass("devDefSysReqMinWrapper");
         if (devDefSysReqMinWrapper.isEmpty()) {
-            return;
+            return false;
         }
         Elements min = devDefSysReqMinWrapper.get(0)
                 .getElementsByTag("li");
@@ -195,6 +199,7 @@ public class GameService {
                 game.setStorage(storage);
             }
         });
+        return true;
     }
 
     private Status checkWindows(Windows windows, Game game) {
