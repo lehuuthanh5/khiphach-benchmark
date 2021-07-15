@@ -65,9 +65,6 @@ public class GameService {
         game.setCpuMax(resultMax.getCpu());
         game.setGpuMin(resultMin.getGpu());
         game.setGpuMax(resultMax.getGpu());
-        if (gameDAO.existsById(game.getCode())) {
-            throw new IllegalIdentifierException("Game code is existing");
-        }
         return gameDAO.save(game);
     }
 
@@ -167,6 +164,8 @@ public class GameService {
                     game.setWindows(Windows.X64);
                 }
                 game.setOsDesc(text.replace("OS: ", ""));
+            } else {
+                game.setWindows(Windows.BOTH);
             }
             if (text.contains("Processor: ")) {
                 String desc = text.replace("Processor: ", "").trim();
