@@ -36,37 +36,6 @@ public class GameService {
     private GameMapper gameMapper;
     private final Map<String, String> type = new HashMap<>();
 
-    public GameService() {
-        type.put("Action", "Hành Động");
-        type.put("Adventure", "Phiêu Lưu");
-        type.put("Arcade", "Giải Trí");
-        type.put("Battle Royale", "Battle Royale");
-        type.put("Co-op", "Co-op");
-        type.put("Crime", "Tội Phạm");
-        type.put("Fantasy", "Thần Thoại");
-        type.put("Fighting", "Đối Kháng");
-        type.put("Historic", "Lịch Sử");
-        type.put("Horror", "Kinh Dị");
-        type.put("Management", "Quản Lý");
-        type.put("Metroidvania", "Metroidvania");
-        type.put("MOBA", "MOBA");
-        type.put("Mystery", "Huyền Bí");
-        type.put("Platformer", "Đi Cảnh");
-        type.put("Puzzler", "Giải Đố");
-        type.put("PvP", "PvP");
-        type.put("Racing", "Đua Xe");
-        type.put("Retro", "Cổ Điển");
-        type.put("Rhythm", "Âm Nhạc");
-        type.put("RPG", "Nhập Vai");
-        type.put("Shooter", "Bắn Súng");
-        type.put("Sim", "Mô Phỏng");
-        type.put("Social", "Xã Hội");
-        type.put("Sport", "Thể Thao");
-        type.put("Strategy", "Chiến Thuật");
-        type.put("Survival", "Sinh Tồn");
-        type.put("Turn-based", "Turn-based");
-    }
-
     public List<Game> getAllGames() {
         return gameDAO.findAll();
     }
@@ -123,6 +92,11 @@ public class GameService {
         return checkResponse;
     }
 
+    public List<Game> canPlayGame(String cpu, String gpu, int ram, Windows windows) {
+        Result result = benchMarkService.getBenchMark(cpu, gpu);
+        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindows(result.getGpu(), result.getCpu(), ram, windows);
+    }
+
     private void extractedMax(GameDTO game, Document document) {
         Elements devDefSysReqRecWrapper = document.getElementsByClass("devDefSysReqRecWrapper");
         if (devDefSysReqRecWrapper.isEmpty()) {
@@ -172,7 +146,6 @@ public class GameService {
             }
         });
     }
-
 
     private void extractedMin(GameDTO game, Document document) {
         Elements devDefSysReqMinWrapper = document.getElementsByClass("devDefSysReqMinWrapper");
@@ -269,5 +242,36 @@ public class GameService {
             return Status.HIGH;
         }
         return Status.MEDIUM;
+    }
+
+    public GameService() {
+        type.put("Action", "Hành Động");
+        type.put("Adventure", "Phiêu Lưu");
+        type.put("Arcade", "Giải Trí");
+        type.put("Battle Royale", "Battle Royale");
+        type.put("Co-op", "Co-op");
+        type.put("Crime", "Tội Phạm");
+        type.put("Fantasy", "Thần Thoại");
+        type.put("Fighting", "Đối Kháng");
+        type.put("Historic", "Lịch Sử");
+        type.put("Horror", "Kinh Dị");
+        type.put("Management", "Quản Lý");
+        type.put("Metroidvania", "Metroidvania");
+        type.put("MOBA", "MOBA");
+        type.put("Mystery", "Huyền Bí");
+        type.put("Platformer", "Đi Cảnh");
+        type.put("Puzzler", "Giải Đố");
+        type.put("PvP", "PvP");
+        type.put("Racing", "Đua Xe");
+        type.put("Retro", "Cổ Điển");
+        type.put("Rhythm", "Âm Nhạc");
+        type.put("RPG", "Nhập Vai");
+        type.put("Shooter", "Bắn Súng");
+        type.put("Sim", "Mô Phỏng");
+        type.put("Social", "Xã Hội");
+        type.put("Sport", "Thể Thao");
+        type.put("Strategy", "Chiến Thuật");
+        type.put("Survival", "Sinh Tồn");
+        type.put("Turn-based", "Turn-based");
     }
 }

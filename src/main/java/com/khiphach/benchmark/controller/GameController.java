@@ -46,6 +46,11 @@ public class GameController {
         return gameService.checkGame(code, cpu, gpu, ram, windows);
     }
 
+    @GetMapping("/can-play")
+    public List<Game> canPlayGame(@RequestParam String cpu, @RequestParam String gpu, @RequestParam int ram, @RequestParam Windows windows) {
+        return gameService.canPlayGame(cpu, gpu, ram, windows);
+    }
+
     @DeleteMapping
     public void deleteGame(@RequestParam String code) {
         gameService.deleteGame(code);
