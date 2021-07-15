@@ -42,7 +42,7 @@ public class GameService {
 
     public Game createGame(String link) throws IOException {
         GameDTO game = new GameDTO();
-        Document document = Jsoup.connect(link).userAgent("Mozilla").get();
+        Document document = Jsoup.connect(link).userAgent("Mozilla").timeout(1000000).get();
         String gameName = document.getElementsByAttributeValue("itemprop", "name").get(0).text().replace("System Requirements", "").trim();
         game.setName(gameName);
         String translatedType = Stream.of(document.getElementsByClass("gameGenreRow").get(0).text().split(",")).map(s -> type.get(s.trim()))
