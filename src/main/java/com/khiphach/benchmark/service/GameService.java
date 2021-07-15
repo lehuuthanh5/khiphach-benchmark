@@ -124,7 +124,11 @@ public class GameService {
     }
 
     private void extractedMax(GameDTO game, Document document) {
-        Elements max = document.getElementsByClass("devDefSysReqRecWrapper").get(0)
+        Elements devDefSysReqRecWrapper = document.getElementsByClass("devDefSysReqRecWrapper");
+        if (devDefSysReqRecWrapper.isEmpty()) {
+            return;
+        }
+        Elements max = devDefSysReqRecWrapper.get(0)
                 .getElementsByTag("li");
         max.forEach(element -> {
             String text = element.text();
@@ -171,7 +175,11 @@ public class GameService {
 
 
     private void extractedMin(GameDTO game, Document document) {
-        Elements min = document.getElementsByClass("devDefSysReqMinWrapper").get(0)
+        Elements devDefSysReqMinWrapper = document.getElementsByClass("devDefSysReqMinWrapper");
+        if (devDefSysReqMinWrapper.isEmpty()) {
+            return;
+        }
+        Elements min = devDefSysReqMinWrapper.get(0)
                 .getElementsByTag("li");
         min.forEach(element -> {
             String text = element.text();

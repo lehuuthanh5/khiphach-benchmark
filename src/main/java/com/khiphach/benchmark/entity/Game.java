@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
+@Table(indexes = @Index(columnList = "gpuMin, cpuMin, ramMin, windows"))
 public class Game {
     @Id
     @Column(length = 40)
