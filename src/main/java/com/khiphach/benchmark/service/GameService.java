@@ -120,15 +120,18 @@ public class GameService {
                 game.setOsMaxDesc(text.replace("OS: ", ""));
                 osFound.set(true);
             }
-            if (text.contains("Processor: ") || text.contains("PROCESSOR: ") || text.contains("Processor (Intel): ") || text.contains("CPU : ") || text.contains("Core i")) {
+            if (text.contains("Processor: ") || text.contains("PROCESSOR: ") || text.contains("Processor (Intel): ")
+                    || text.contains("CPU : ") || text.contains("Core i") || text.contains("CPU: ")) {
                 String desc = text.replace("Processor: ", "")
                         .replace("PROCESSOR: ", "")
                         .replace("CPU : ", "")
+                        .replace("CPU: ", "")
                         .replace("Processor (Intel): ", "").trim();
                 game.setCpuMax(desc.split("/")[0].trim().split(" or ")[0].trim().split(" OR ")[0].trim());
                 game.setCpuMaxDesc(desc);
             }
-            if (text.contains("Graphics: ") || text.contains("VIDEO CARD: ") || text.contains("Graphics card (NVIDIA): ") || text.contains("GPU : ") || text.contains("NVIDIA")) {
+            if (text.contains("Graphics: ") || text.contains("VIDEO CARD: ") || text.contains("Graphics card (NVIDIA): ") || text.contains("GPU : ")
+                    || text.contains("NVIDIA") || text.contains("GeForce") || text.contains("GTX")) {
                 String desc = text.replace("Graphics: ", "")
                         .replace("VIDEO CARD: ", "")
                         .replace("GPU : ", "")
@@ -137,15 +140,25 @@ public class GameService {
                 game.setGpuMax(desc.split(" or ")[0].trim().split(" / ")[0].trim());
                 game.setGpuMaxDesc(desc);
             }
-            if (text.contains("System Memory: ") || text.contains("Memory: ") || text.contains("SYSTEM RAM: ") || text.contains("RAM : ") || text.contains(" RAM")) {
+            if (text.contains("System Memory: ") || text.contains("Memory: ")
+                    || text.contains("SYSTEM RAM: ")
+                    || text.contains("RAM : ") || text.contains("RAM: ")
+                    || text.contains(" RAM")
+                    || text.contains("GB Ram")
+                    || text.contains("GB RAM")) {
                 String desc = text.replace("System Memory: ", "")
                         .replace("Memory: ", "")
                         .replace("SYSTEM RAM: ", "")
                         .replace("RAM : ", "")
+                        .replace("RAM: ", "")
                         .replace(" GB RAM", "")
-                        .replace(" MB RAM", "").trim();
+                        .replace("GB RAM", "")
+                        .replace("GB Ram", "")
+                        .replace("GB", "")
+                        .replace("GB*", "")
+                        .replace("MB", "").trim();
                 int ramMax = Integer.parseInt(desc);
-                if (text.contains(" GB ")) {
+                if (text.contains("GB")) {
                     ramMax = ramMax * 1024;
                 }
                 game.setRamMax(ramMax);
@@ -186,16 +199,20 @@ public class GameService {
                 game.setOsMinDesc(text.replace("OS: ", ""));
                 osFound.set(true);
             }
-            if (text.contains("Processor: ") || text.contains("PROCESSOR: ") || text.contains("Processor (Intel): ") || text.contains("CPU : ") || text.contains("Core i")) {
+            if (text.contains("Processor: ") || text.contains("PROCESSOR: ") || text.contains("Processor (Intel): ")
+                    || text.contains("CPU : ") || text.contains("CPU: ")
+                    || text.contains("Core i")) {
                 String desc = text.replace("Processor: ", "")
                         .replace("PROCESSOR: ", "")
                         .replace("CPU : ", "")
+                        .replace("CPU: ", "")
                         .replace("Processor (Intel): ", "")
                         .trim();
                 game.setCpuMin(desc.split("/")[0].trim().split(" or ")[0].trim().split(" OR ")[0].trim());
                 game.setCpuMinDesc(desc);
             }
-            if (text.contains("Graphics: ") || text.contains("VIDEO CARD: ") || text.contains("Graphics card (NVIDIA): ") || text.contains("GPU : ") || text.contains("NVIDIA")) {
+            if (text.contains("Graphics: ") || text.contains("VIDEO CARD: ") || text.contains("Graphics card (NVIDIA): ")
+                    || text.contains("GPU : ") || text.contains("NVIDIA") || text.contains("GeForce") || text.contains("GTX")) {
                 String desc = text.replace("Graphics: ", "")
                         .replace("VIDEO CARD: ", "")
                         .replace("GPU : ", "")
@@ -204,15 +221,25 @@ public class GameService {
                 game.setGpuMin(desc.split(" or ")[0].trim().split(" / ")[0].trim());
                 game.setGpuMinDesc(desc);
             }
-            if (text.contains("System Memory: ") || text.contains("SYSTEM RAM: ") || text.contains("Memory: ") || text.contains("RAM : ") || text.contains(" RAM")) {
+            if (text.contains("System Memory: ") || text.contains("SYSTEM RAM: ")
+                    || text.contains("Memory: ") || text.contains("RAM : ")
+                    || text.contains(" RAM")
+                    || text.contains("RAM: ")
+                    || text.contains("GB Ram")
+                    || text.contains("GB RAM")) {
                 String desc = text.replace("System Memory: ", "")
                         .replace("SYSTEM RAM: ", "")
                         .replace("Memory: ", "")
                         .replace("RAM : ", "")
+                        .replace("RAM: ", "")
                         .replace(" GB RAM", "")
+                        .replace("GB RAM", "")
+                        .replace("GB", "")
+                        .replace("GB*", "")
+                        .replace("GB Ram", "")
                         .replace(" MB RAM", "").trim();
                 int ramMin = Integer.parseInt(desc);
-                if (text.contains(" GB ")) {
+                if (text.contains("GB")) {
                     ramMin = ramMin * 1024;
                 }
                 game.setRamMin(ramMin);
