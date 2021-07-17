@@ -155,6 +155,7 @@ public class GameService {
                         .replace("GB RAM", "")
                         .replace("GB Ram", "")
                         .replace("GB", "")
+                        .replace("RAM", "")
                         .replace("GB*", "")
                         .replace("MB", "").trim();
                 int ramMax = Integer.parseInt(desc);
@@ -237,6 +238,7 @@ public class GameService {
                         .replace("GB", "")
                         .replace("GB*", "")
                         .replace("GB Ram", "")
+                        .replace("RAM", "")
                         .replace(" MB RAM", "").trim();
                 int ramMin = Integer.parseInt(desc);
                 if (text.contains("GB")) {
