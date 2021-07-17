@@ -11,70 +11,16 @@ public class GameDTO {
     private String cpuMax;
     private int ramMin;
     private int ramMax;
-    private Windows windows;
+    private Windows windowsMin;
+    private Windows windowsMax;
     private String gpuMinDesc;
     private String gpuMaxDesc;
     private String cpuMinDesc;
     private String cpuMaxDesc;
-    private String osDesc;
+    private String osMinDesc;
+    private String osMaxDesc;
     private int storage;
     private String type;
-
-    public String getGpuMinDesc() {
-        return gpuMinDesc;
-    }
-
-    public void setGpuMinDesc(String gpuMinDesc) {
-        this.gpuMinDesc = gpuMinDesc;
-    }
-
-    public String getGpuMaxDesc() {
-        return gpuMaxDesc;
-    }
-
-    public void setGpuMaxDesc(String gpuMaxDesc) {
-        this.gpuMaxDesc = gpuMaxDesc;
-    }
-
-    public String getCpuMinDesc() {
-        return cpuMinDesc;
-    }
-
-    public void setCpuMinDesc(String cpuMinDesc) {
-        this.cpuMinDesc = cpuMinDesc;
-    }
-
-    public String getCpuMaxDesc() {
-        return cpuMaxDesc;
-    }
-
-    public void setCpuMaxDesc(String cpuMaxDesc) {
-        this.cpuMaxDesc = cpuMaxDesc;
-    }
-
-    public String getOsDesc() {
-        return osDesc;
-    }
-
-    public void setOsDesc(String osDesc) {
-        this.osDesc = osDesc;
-    }
-
-    public int getStorage() {
-        return storage;
-    }
-
-    public void setStorage(int storage) {
-        this.storage = storage;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getCode() {
         return code;
@@ -140,11 +86,83 @@ public class GameDTO {
         this.ramMax = ramMax;
     }
 
-    public Windows getWindows() {
-        return windows;
+    public Windows getWindowsMin() {
+        return windowsMin;
     }
 
-    public void setWindows(Windows windows) {
-        this.windows = windows;
+    public void setWindowsMin(Windows windowsMin) {
+        this.windowsMin = windowsMin;
+    }
+
+    public Windows getWindowsMax() {
+        return windowsMax;
+    }
+
+    public void setWindowsMax(Windows windowsMax) {
+        this.windowsMax = windowsMax;
+    }
+
+    public String getGpuMinDesc() {
+        return gpuMinDesc;
+    }
+
+    public void setGpuMinDesc(String gpuMinDesc) {
+        this.gpuMinDesc = gpuMinDesc;
+    }
+
+    public String getGpuMaxDesc() {
+        return gpuMaxDesc;
+    }
+
+    public void setGpuMaxDesc(String gpuMaxDesc) {
+        this.gpuMaxDesc = gpuMaxDesc;
+    }
+
+    public String getCpuMinDesc() {
+        return cpuMinDesc;
+    }
+
+    public void setCpuMinDesc(String cpuMinDesc) {
+        this.cpuMinDesc = cpuMinDesc;
+    }
+
+    public String getCpuMaxDesc() {
+        return cpuMaxDesc;
+    }
+
+    public void setCpuMaxDesc(String cpuMaxDesc) {
+        this.cpuMaxDesc = cpuMaxDesc;
+    }
+
+    public String getOsMinDesc() {
+        return osMinDesc;
+    }
+
+    public void setOsMinDesc(String osMinDesc) {
+        this.osMinDesc = osMinDesc;
+    }
+
+    public String getOsMaxDesc() {
+        return osMaxDesc;
+    }
+
+    public void setOsMaxDesc(String osMaxDesc) {
+        this.osMaxDesc = osMaxDesc;
+    }
+
+    public int getStorage() {
+        return storage;
+    }
+
+    public void setStorage(int storage) {
+        this.storage = storage;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

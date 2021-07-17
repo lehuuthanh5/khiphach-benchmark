@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface GameDAO extends JpaRepository<Game, String> {
-    List<Game> findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindows(int gpuMin, int cpuMin, int ramMin, Windows windows);
+    List<Game> findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindowsMin(int gpuMin, int cpuMin, int ramMin, Windows windowsMin);
 }

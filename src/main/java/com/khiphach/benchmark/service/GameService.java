@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,6 +59,9 @@ public class GameService {
     }
 
     public Game createGame(GameDTO gameDTO) {
+        if (gameDTO.getCpuMin().isEmpty() && gameDTO.getCpuMax().isEmpty()) {
+            return null;
+        }
         Game game = gameMapper.gameDTOtoGame(gameDTO);
         Result resultMin = benchMarkService.getBenchMark(gameDTO.getCpuMin(), gameDTO.getGpuMin());
         Result resultMax = benchMarkService.getBenchMark(gameDTO.getCpuMax(), gameDTO.getGpuMax());
@@ -94,7 +98,7 @@ public class GameService {
 
     public List<Game> canPlayGame(String cpu, String gpu, int ram, Windows windows) {
         Result result = benchMarkService.getBenchMark(cpu, gpu);
-        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindows(result.getGpu(), result.getCpu(), ram, windows);
+        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindowsMin(result.getGpu(), result.getCpu(), ram, windows);
     }
 
     private boolean extractedMax(GameDTO game, Document document) {
@@ -104,28 +108,40 @@ public class GameService {
         }
         Elements max = devDefSysReqRecWrapper.get(0)
                 .getElementsByTag("li");
+        AtomicBoolean osFound = new AtomicBoolean(false);
         max.forEach(element -> {
             String text = element.text();
-            if (text.contains("OS: ")) {
+            if (text.contains("OS: ") || text.contains("Windows")) {
                 if (text.contains("32")) {
-                    game.setWindows(Windows.BOTH);
+                    game.setWindowsMax(Windows.BOTH);
                 } else {
-                    game.setWindows(Windows.X64);
+                    game.setWindowsMax(Windows.X64);
                 }
-                game.setOsDesc(text.replace("OS: ", ""));
+                game.setOsMaxDesc(text.replace("OS: ", ""));
+                osFound.set(true);
             }
-            if (text.contains("Processor: ")) {
-                String desc = text.replace("Processor: ", "").trim();
-                game.setCpuMax(desc.split(" / ")[0].trim());
+            if (text.contains("Processor: ") || text.contains("PROCESSOR: ") || text.contains("Processor (Intel): ") || text.contains("CPU : ") || text.contains("Core i")) {
+                String desc = text.replace("Processor: ", "")
+                        .replace("PROCESSOR: ", "")
+                        .replace("CPU : ", "")
+                        .replace("Processor (Intel): ", "").trim();
+                game.setCpuMax(desc.split("/")[0].trim().split(" or ")[0].trim().split(" OR ")[0].trim());
                 game.setCpuMaxDesc(desc);
             }
-            if (text.contains("Graphics: ")) {
-                String desc = text.replace("Graphics: ", "").trim();
-                game.setGpuMax(desc.split(" or ")[0].trim());
+            if (text.contains("Graphics: ") || text.contains("VIDEO CARD: ") || text.contains("Graphics card (NVIDIA): ") || text.contains("GPU : ") || text.contains("NVIDIA")) {
+                String desc = text.replace("Graphics: ", "")
+                        .replace("VIDEO CARD: ", "")
+                        .replace("GPU : ", "")
+                        .replace("Graphics card (NVIDIA): ", "")
+                        .trim();
+                game.setGpuMax(desc.split(" or ")[0].trim().split(" / ")[0].trim());
                 game.setGpuMaxDesc(desc);
             }
-            if (text.contains("System Memory: ")) {
+            if (text.contains("System Memory: ") || text.contains("Memory: ") || text.contains("SYSTEM RAM: ") || text.contains("RAM : ") || text.contains(" RAM")) {
                 String desc = text.replace("System Memory: ", "")
+                        .replace("Memory: ", "")
+                        .replace("SYSTEM RAM: ", "")
+                        .replace("RAM : ", "")
                         .replace(" GB RAM", "")
                         .replace(" MB RAM", "").trim();
                 int ramMax = Integer.parseInt(desc);
@@ -145,6 +161,9 @@ public class GameService {
                 game.setStorage(storage);
             }
         });
+        if (!osFound.get()) {
+            game.setWindowsMax(Windows.BOTH);
+        }
         return true;
     }
 
@@ -155,30 +174,41 @@ public class GameService {
         }
         Elements min = devDefSysReqMinWrapper.get(0)
                 .getElementsByTag("li");
+        AtomicBoolean osFound = new AtomicBoolean(false);
         min.forEach(element -> {
             String text = element.text();
             if (text.contains("OS: ")) {
                 if (text.contains("32")) {
-                    game.setWindows(Windows.BOTH);
+                    game.setWindowsMin(Windows.BOTH);
                 } else {
-                    game.setWindows(Windows.X64);
+                    game.setWindowsMin(Windows.X64);
                 }
-                game.setOsDesc(text.replace("OS: ", ""));
-            } else {
-                game.setWindows(Windows.BOTH);
+                game.setOsMinDesc(text.replace("OS: ", ""));
+                osFound.set(true);
             }
-            if (text.contains("Processor: ")) {
-                String desc = text.replace("Processor: ", "").trim();
-                game.setCpuMin(desc.split(" / ")[0].trim());
+            if (text.contains("Processor: ") || text.contains("PROCESSOR: ") || text.contains("Processor (Intel): ") || text.contains("CPU : ") || text.contains("Core i")) {
+                String desc = text.replace("Processor: ", "")
+                        .replace("PROCESSOR: ", "")
+                        .replace("CPU : ", "")
+                        .replace("Processor (Intel): ", "")
+                        .trim();
+                game.setCpuMin(desc.split("/")[0].trim().split(" or ")[0].trim().split(" OR ")[0].trim());
                 game.setCpuMinDesc(desc);
             }
-            if (text.contains("Graphics: ")) {
-                String desc = text.replace("Graphics: ", "").trim();
-                game.setGpuMin(desc.split(" or ")[0].trim());
+            if (text.contains("Graphics: ") || text.contains("VIDEO CARD: ") || text.contains("Graphics card (NVIDIA): ") || text.contains("GPU : ") || text.contains("NVIDIA")) {
+                String desc = text.replace("Graphics: ", "")
+                        .replace("VIDEO CARD: ", "")
+                        .replace("GPU : ", "")
+                        .replace("Graphics card (NVIDIA): ", "")
+                        .trim();
+                game.setGpuMin(desc.split(" or ")[0].trim().split(" / ")[0].trim());
                 game.setGpuMinDesc(desc);
             }
-            if (text.contains("System Memory: ")) {
+            if (text.contains("System Memory: ") || text.contains("SYSTEM RAM: ") || text.contains("Memory: ") || text.contains("RAM : ") || text.contains(" RAM")) {
                 String desc = text.replace("System Memory: ", "")
+                        .replace("SYSTEM RAM: ", "")
+                        .replace("Memory: ", "")
+                        .replace("RAM : ", "")
                         .replace(" GB RAM", "")
                         .replace(" MB RAM", "").trim();
                 int ramMin = Integer.parseInt(desc);
@@ -198,11 +228,14 @@ public class GameService {
                 game.setStorage(storage);
             }
         });
+        if (!osFound.get()) {
+            game.setWindowsMin(Windows.BOTH);
+        }
         return true;
     }
 
     private Status checkWindows(Windows windows, Game game) {
-        if (game.getWindows() == windows || game.getWindows() == Windows.BOTH) {
+        if (game.getWindowsMin() == windows || game.getWindowsMin() == Windows.BOTH) {
             return Status.HIGH;
         }
         return Status.CANNOT;

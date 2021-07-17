@@ -11,7 +11,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 
 @Entity
-@Table(indexes = @Index(columnList = "gpuMin, cpuMin, ramMin, windows"))
+@Table(indexes = @Index(columnList = "gpuMin, cpuMin, ramMin, windowsMin"))
 public class Game {
     @Id
     @Column(length = 40)
@@ -25,21 +25,41 @@ public class Game {
     private int ramMax;
     @Column(length = 4)
     @Enumerated(EnumType.STRING)
-    private Windows windows;
+    private Windows windowsMin;
+    @Column(length = 4)
+    @Enumerated(EnumType.STRING)
+    private Windows windowsMax;
     private String gpuMinDesc;
     private String gpuMaxDesc;
     private String cpuMinDesc;
     private String cpuMaxDesc;
-    private String osDesc;
+    private String osMinDesc;
+    private String osMaxDesc;
     private int storage;
     private String type;
 
-    public String getOsDesc() {
-        return osDesc;
+    public Windows getWindowsMax() {
+        return windowsMax;
     }
 
-    public void setOsDesc(String osDesc) {
-        this.osDesc = osDesc;
+    public void setWindowsMax(Windows windowsMax) {
+        this.windowsMax = windowsMax;
+    }
+
+    public String getOsMaxDesc() {
+        return osMaxDesc;
+    }
+
+    public void setOsMaxDesc(String osMaxDesc) {
+        this.osMaxDesc = osMaxDesc;
+    }
+
+    public String getOsMinDesc() {
+        return osMinDesc;
+    }
+
+    public void setOsMinDesc(String osMinDesc) {
+        this.osMinDesc = osMinDesc;
     }
 
     public String getGpuMinDesc() {
@@ -154,11 +174,11 @@ public class Game {
         this.ramMax = ramMax;
     }
 
-    public Windows getWindows() {
-        return windows;
+    public Windows getWindowsMin() {
+        return windowsMin;
     }
 
-    public void setWindows(Windows windows) {
-        this.windows = windows;
+    public void setWindowsMin(Windows windowsMin) {
+        this.windowsMin = windowsMin;
     }
 }
