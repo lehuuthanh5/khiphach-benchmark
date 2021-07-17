@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public class GameService {
     }
 
     public Game createGame(GameDTO gameDTO) {
-        if (gameDTO.getCpuMin().isEmpty() && gameDTO.getCpuMax().isEmpty()) {
+        if (!StringUtils.hasText(gameDTO.getCpuMin()) && !StringUtils.hasText(gameDTO.getCpuMax())) {
             return null;
         }
         Game game = gameMapper.gameDTOtoGame(gameDTO);
