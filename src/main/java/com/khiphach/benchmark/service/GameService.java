@@ -169,7 +169,7 @@ public class GameService {
                 String desc = text.replace("Storage: ", "")
                         .replace(" GB Hard drive space", "")
                         .replace(" MB Hard drive space", "").trim();
-                int storage = Integer.parseInt(desc);
+                int storage = (int) Float.parseFloat(desc);
                 if (text.contains(" GB ")) {
                     storage = storage * 1024;
                 }
@@ -251,7 +251,7 @@ public class GameService {
                 String desc = text.replace("Storage: ", "")
                         .replace(" GB Hard drive space", "")
                         .replace(" MB Hard drive space", "").trim();
-                int storage = Integer.parseInt(desc);
+                int storage = (int) Float.parseFloat(desc);
                 if (text.contains(" GB ")) {
                     storage = storage * 1024;
                 }
