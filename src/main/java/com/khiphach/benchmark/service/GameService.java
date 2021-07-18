@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,6 +26,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +40,26 @@ public class GameService {
     @Autowired
     private GameMapper gameMapper;
     private final Map<String, String> type = new HashMap<>();
+    private List<String> gameNames;
+
+    @PostConstruct
+    public void postConstruct() {
+        gameNames = gameDAO.findAll().stream().map(Game::getName).collect(Collectors.toList());
+    }
+
+    public List<String> searchGame(String text) {
+        //[Gg].*\s[tT].*\s[aA].*
+        StringBuilder regex = new StringBuilder("[");
+        for (int i = 0; i < text.length(); i++) {
+            regex.append(String.valueOf(text.charAt(i)).toUpperCase(Locale.ROOT));
+            regex.append(String.valueOf(text.charAt(i)).toLowerCase(Locale.ROOT));
+            regex.append("].*\\s[");
+        }
+        regex.append("].*");
+        String pattern = regex.toString();
+        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).startsWith(text)
+                || Pattern.matches(pattern, s)).collect(Collectors.toList());
+    }
 
     public List<Game> getAllGames() {
         return gameDAO.findAll();

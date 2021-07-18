@@ -31,6 +31,11 @@ public class GameController {
         return gameService.getAllGames();
     }
 
+    @GetMapping("/search")
+    public List<String> searchGame(@RequestParam String text) {
+        return gameService.searchGame(text);
+    }
+
     @PostMapping
     public Game createGame(@RequestBody GameDTO game) {
         return gameService.createGame(game);
