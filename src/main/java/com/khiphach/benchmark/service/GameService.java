@@ -59,7 +59,7 @@ public class GameService {
         }
         regex.append("].*");
         String pattern = regex.toString();
-        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).contains(text)
+        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).startsWith(text)
                 || Pattern.matches(pattern, s)).limit(5).collect(Collectors.toList());
     }
 
