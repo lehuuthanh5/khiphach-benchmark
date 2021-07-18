@@ -53,7 +53,9 @@ public class GameService {
         for (int i = 0; i < text.length(); i++) {
             regex.append(String.valueOf(text.charAt(i)).toUpperCase(Locale.ROOT));
             regex.append(String.valueOf(text.charAt(i)).toLowerCase(Locale.ROOT));
-            regex.append("].*\\s[");
+            if (i != (text.length() - 1)) {
+                regex.append("].*\\s[");
+            }
         }
         regex.append("].*");
         String pattern = regex.toString();
