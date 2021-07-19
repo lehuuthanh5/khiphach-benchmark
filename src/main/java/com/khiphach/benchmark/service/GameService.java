@@ -105,7 +105,7 @@ public class GameService {
     public CheckResponse checkGame(String code, String cpu, String gpu, int ram, Windows windows) {
         Game game = gameDAO.findById(code).orElse(null);
         if (game == null) {
-            throw new IllegalIdentifierException("Invalid game code");
+            throw new IllegalIdentifierException("Không tìm ra game đã nhập!");
         }
         Result result = benchMarkService.getBenchMark(cpu, gpu);
         List<Status> checkList = Arrays.asList(checkCPU(result.getCpu(), game), checkGPU(result.getGpu(), game)
