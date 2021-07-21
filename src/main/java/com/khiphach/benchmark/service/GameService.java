@@ -8,7 +8,6 @@ import com.khiphach.benchmark.model.CheckResponse;
 import com.khiphach.benchmark.model.GameDTO;
 import com.khiphach.benchmark.model.Result;
 import com.khiphach.benchmark.repository.GameDAO;
-import org.apache.commons.collections4.IteratorUtils;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
