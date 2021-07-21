@@ -8,11 +8,14 @@ import com.khiphach.benchmark.model.CheckResponse;
 import com.khiphach.benchmark.model.GameDTO;
 import com.khiphach.benchmark.model.Result;
 import com.khiphach.benchmark.repository.GameDAO;
+import org.apache.commons.collections4.IteratorUtils;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -26,10 +29,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 public class GameService {
@@ -44,7 +47,8 @@ public class GameService {
 
     @PostConstruct
     public void postConstruct() {
-        gameNames = gameDAO.findAll().stream().map(Game::getName).collect(Collectors.toList());
+        gameNames = StreamSupport.stream(gameDAO.findAll().spliterator(), false)
+                .collect(Collectors.toList()).stream().map(Game::getName).collect(Collectors.toList());
     }
 
     public List<String> searchGame(String text) {
@@ -64,7 +68,8 @@ public class GameService {
     }
 
     public List<Game> getAllGames() {
-        return gameDAO.findAll();
+        return StreamSupport.stream(gameDAO.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     public Game createGame(String link) throws IOException {
@@ -128,9 +133,10 @@ public class GameService {
         return checkResponse;
     }
 
-    public List<CheckResponse> canPlayGame(String cpu, String gpu, int ram, Windows windows) {
+    public List<CheckResponse> canPlayGame(String cpu, String gpu, int ram, Windows windows, int page) {
         Result result = benchMarkService.getBenchMark(cpu, gpu);
-        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindowsMin(result.getGpu(), result.getCpu(), ram, windows)
+        Pageable pageable = PageRequest.of(page, 10);
+        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindowsMin(result.getGpu(), result.getCpu(), ram, windows, pageable)
                 .stream().map(game -> getCheckResponse(ram, windows, game, result)).collect(Collectors.toList());
     }
 
