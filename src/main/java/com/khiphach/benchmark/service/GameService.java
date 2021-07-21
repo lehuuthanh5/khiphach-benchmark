@@ -108,12 +108,18 @@ public class GameService {
             throw new IllegalIdentifierException("Không tìm ra game đã nhập!");
         }
         Result result = benchMarkService.getBenchMark(cpu, gpu);
+        return getCheckResponse(ram, windows, game, result);
+    }
+
+    private CheckResponse getCheckResponse(int ram, Windows windows, Game game, Result result) {
         List<Status> checkList = Arrays.asList(checkCPU(result.getCpu(), game), checkGPU(result.getGpu(), game)
                 , checkWindows(windows, game), checkRAM(ram, game));
         checkList.sort(Comparator.comparingInt(Enum::ordinal));
         CheckResponse checkResponse = new CheckResponse();
         Status status = checkList.get(0);
         checkResponse.setStatus(status);
+        checkResponse.setGame(game.getName());
+        checkResponse.setType(game.getType());
         if (status == Status.CANNOT) {
             checkResponse.setMessage("Bác không thể chiến game này rồi!");
         } else {
@@ -122,9 +128,10 @@ public class GameService {
         return checkResponse;
     }
 
-    public List<Game> canPlayGame(String cpu, String gpu, int ram, Windows windows) {
+    public List<CheckResponse> canPlayGame(String cpu, String gpu, int ram, Windows windows) {
         Result result = benchMarkService.getBenchMark(cpu, gpu);
-        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindowsMin(result.getGpu(), result.getCpu(), ram, windows);
+        return gameDAO.findAllByGpuMinLessThanEqualAndCpuMinLessThanEqualAndRamMinLessThanEqualAndWindowsMin(result.getGpu(), result.getCpu(), ram, windows)
+                .stream().map(game -> getCheckResponse(ram, windows, game, result)).collect(Collectors.toList());
     }
 
     private boolean extractedMax(GameDTO game, Document document) {

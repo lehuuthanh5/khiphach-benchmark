@@ -52,7 +52,7 @@ public class GameController {
     }
 
     @GetMapping("/can-play")
-    public List<Game> canPlayGame(@RequestParam String cpu, @RequestParam String gpu, @RequestParam int ram, @RequestParam Windows windows) {
+    public List<CheckResponse> canPlayGame(@RequestParam String cpu, @RequestParam String gpu, @RequestParam int ram, @RequestParam Windows windows) {
         return gameService.canPlayGame(cpu, gpu, ram, windows);
     }
 
