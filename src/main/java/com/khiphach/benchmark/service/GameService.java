@@ -183,7 +183,7 @@ public class GameService {
                     || text.contains("RAM : ") || text.contains("RAM: ")
                     || text.contains(" RAM")
                     || text.contains("GB Ram")
-                    || text.contains("GB RAM")) && !text.contains("VRAM:")) {
+                    || text.contains("GB RAM")) && !text.contains("VRAM:") && !text.contains("GPU RAM")) {
                 String desc = text.replace("System Memory: ", "")
                         .replace("Memory: ", "")
                         .replace("SYSTEM RAM: ", "")
@@ -267,7 +267,7 @@ public class GameService {
                     || text.contains(" RAM")
                     || text.contains("RAM: ")
                     || text.contains("GB Ram")
-                    || text.contains("GB RAM")) && !text.contains("VRAM:")) {
+                    || text.contains("GB RAM")) && !text.contains("VRAM:") && !text.contains("GPU RAM")) {
                 String desc = text.replace("System Memory: ", "")
                         .replace("SYSTEM RAM: ", "")
                         .replace("Memory: ", "")
