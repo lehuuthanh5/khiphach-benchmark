@@ -178,12 +178,12 @@ public class GameService {
                 game.setGpuMax(desc.split(" or ")[0].trim().split(" / ")[0].trim());
                 game.setGpuMaxDesc(desc);
             }
-            if (text.contains("System Memory: ") || text.contains("Memory: ")
+            if ((text.contains("System Memory: ") || text.contains("Memory: ")
                     || text.contains("SYSTEM RAM: ")
                     || text.contains("RAM : ") || text.contains("RAM: ")
                     || text.contains(" RAM")
                     || text.contains("GB Ram")
-                    || text.contains("GB RAM")) {
+                    || text.contains("GB RAM")) && !text.contains("VRAM:")) {
                 String desc = text.replace("System Memory: ", "")
                         .replace("Memory: ", "")
                         .replace("SYSTEM RAM: ", "")
@@ -262,12 +262,12 @@ public class GameService {
                 game.setGpuMin(desc.split(" or ")[0].trim().split(" / ")[0].trim());
                 game.setGpuMinDesc(desc);
             }
-            if (text.contains("System Memory: ") || text.contains("SYSTEM RAM: ")
+            if ((text.contains("System Memory: ") || text.contains("SYSTEM RAM: ")
                     || text.contains("Memory: ") || text.contains("RAM : ")
                     || text.contains(" RAM")
                     || text.contains("RAM: ")
                     || text.contains("GB Ram")
-                    || text.contains("GB RAM")) {
+                    || text.contains("GB RAM")) && !text.contains("VRAM:")) {
                 String desc = text.replace("System Memory: ", "")
                         .replace("SYSTEM RAM: ", "")
                         .replace("Memory: ", "")
