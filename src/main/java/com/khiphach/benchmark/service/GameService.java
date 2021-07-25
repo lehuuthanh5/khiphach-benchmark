@@ -62,7 +62,7 @@ public class GameService {
         }
         regex.append("].*");
         String pattern = regex.toString();
-        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).startsWith(text) || s.replaceAll("[^a-zA-Z0-9]","")
+        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).startsWith(text) || s.toLowerCase(Locale.ROOT).replaceAll("[^a-zA-Z0-9]","")
                 .startsWith(text.replaceAll("[^a-zA-Z0-9]",""))
                 || Pattern.matches(pattern, s)).limit(7).collect(Collectors.toList());
     }
