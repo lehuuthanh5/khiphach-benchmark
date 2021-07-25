@@ -62,8 +62,9 @@ public class GameService {
         }
         regex.append("].*");
         String pattern = regex.toString();
-        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).startsWith(text)
-                || Pattern.matches(pattern, s)).limit(5).collect(Collectors.toList());
+        return gameNames.stream().filter(s -> s.toLowerCase(Locale.ROOT).startsWith(text) || s.replaceAll("[^a-zA-Z0-9]","")
+                .startsWith(text.replaceAll("[^a-zA-Z0-9]",""))
+                || Pattern.matches(pattern, s)).limit(7).collect(Collectors.toList());
     }
 
     public List<Game> getAllGames() {
@@ -207,6 +208,7 @@ public class GameService {
                 String desc = text.replace("Storage: ", "")
                         .replace(" GB Hard drive space", "")
                         .replace(" GB available space", "")
+                        .replace(" MB available space", "")
                         .replace(" MB Hard drive space", "").trim();
                 int storage = (int) Float.parseFloat(desc);
                 if (text.contains(" GB ")) {
@@ -291,6 +293,7 @@ public class GameService {
                 String desc = text.replace("Storage: ", "")
                         .replace(" GB Hard drive space", "")
                         .replace(" GB available space", "")
+                        .replace(" MB available space", "")
                         .replace(" MB Hard drive space", "").trim();
                 int storage = (int) Float.parseFloat(desc);
                 if (text.contains(" GB ")) {
